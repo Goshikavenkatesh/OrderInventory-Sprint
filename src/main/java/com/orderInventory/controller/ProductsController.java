@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +20,12 @@ import com.orderInventory.entity.Products;
 import com.orderInventory.exception.ProductsNotFoundException;
 import com.orderInventory.service.ProductsService;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+
 
 @RestController
+@Validated
 public class ProductsController {
 	
 	@Autowired
@@ -31,6 +36,10 @@ public class ProductsController {
 	public  ResponseEntity<List<Products>> getAllProducts() throws ProductsNotFoundException
 	{
 		List<Products> productList=productsService.fetchAllProducts();
+		if(productList == null || productList.isEmpty())
+		{
+			throw new ProductsNotFoundException("No products found");
+		}
 		return new ResponseEntity<List<Products>>(productList,HttpStatus.OK);
 	}
 	
@@ -56,13 +65,17 @@ public class ProductsController {
 		return new ResponseEntity<String>("Product Deleted", HttpStatus.OK);
     }
 	
-	@GetMapping("/api/v1/products /unitprice?min=value&max=value")
+	@GetMapping("/api/v1/products/unitprice")
 	public ResponseEntity<List<Products>> getProductsByUnitPriceRange(
-    @RequestParam(name = "min", required = false) BigDecimal minUnitPrice,
-    @RequestParam(name = "max", required = false) BigDecimal maxUnitPrice) {
-    List<Products> products = productsService.getProductsByUnitPriceRange(minUnitPrice, maxUnitPrice);
-    return new ResponseEntity<>(products, HttpStatus.OK);
-    }
+	        @RequestParam(name = "min", required = false)
+	        @DecimalMin(value = "1000", inclusive = true, message = "min must be greater than 1000")
+	        BigDecimal minUnitPrice,
+	        @RequestParam(name = "max", required = false)
+	        @DecimalMax(value = "9000", inclusive = true, message = "max must be less than or equal to 9000")
+	        BigDecimal maxUnitPrice) throws ProductsNotFoundException {
+	    List<Products> products = productsService.getProductsByUnitPriceRange(minUnitPrice, maxUnitPrice);
+	    return new ResponseEntity<>(products, HttpStatus.OK);
+	}
 	
     @GetMapping("/api/v1/products/sort/byField")
 	public List<Products> getSortedProductsByField(@RequestParam String field, @RequestParam(defaultValue = "asc")String sortBy) throws ProductsNotFoundException{

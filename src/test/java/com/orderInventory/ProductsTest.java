@@ -92,7 +92,7 @@ public class ProductsTest {
 		    }
 		   
 		    @Test
-		    public void testGetProductsByUnitPriceRange() {
+		    public void testGetProductsByUnitPriceRange() throws ProductsNotFoundException {
 		        // Mock data
 		        BigDecimal minUnitPrice = new BigDecimal("10.00");
 		        BigDecimal maxUnitPrice = new BigDecimal("20.00");

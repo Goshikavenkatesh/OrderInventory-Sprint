@@ -12,7 +12,7 @@ public interface ProductsService {
 	Products addProduct(Products product);
 	String updateProducts(Products products)throws ProductsNotFoundException;
 	String deleteProductsById(int productsId)throws ProductsNotFoundException;;
-	List<Products> getProductsByUnitPriceRange(BigDecimal minUnitPrice, BigDecimal maxUnitPrice);
+	List<Products> getProductsByUnitPriceRange(BigDecimal minUnitPrice, BigDecimal maxUnitPrice) throws ProductsNotFoundException;
 	List<Products> getSortedProductsByField(String field, String sortBy)throws ProductsNotFoundException;
 	public Products updateProductNameById(int productId,Products product) throws ProductsNotFoundException;
 }

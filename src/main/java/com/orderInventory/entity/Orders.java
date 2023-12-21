@@ -22,7 +22,7 @@ public class Orders {
 	
 	@ManyToOne
 	@JoinColumn(name = "customer_id")
-	private Customers customerId;
+	private Customers customersId;
 	
 	private String orderStatus;
 	

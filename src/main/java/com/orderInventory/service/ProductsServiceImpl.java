@@ -61,15 +61,15 @@ public class ProductsServiceImpl implements ProductsService {
 	}
 
 	@Override
-	public List<Products> getProductsByUnitPriceRange(BigDecimal minUnitPrice, BigDecimal maxUnitPrice) {
+	public List<Products> getProductsByUnitPriceRange(BigDecimal minUnitPrice, BigDecimal maxUnitPrice) throws ProductsNotFoundException {
 		 if (minUnitPrice != null && maxUnitPrice != null) {
              return productsRepository.findByUnitPriceBetween(minUnitPrice, maxUnitPrice);
          } else if (minUnitPrice != null) {
              return productsRepository.findByUnitPriceGreaterThanEqual(minUnitPrice);
          } else if (maxUnitPrice != null) {
              return productsRepository.findByUnitPriceLessThanEqual(maxUnitPrice);
-         } else {
-             return productsRepository.findAll();
+        } else {
+        	throw new ProductsNotFoundException("Both min and max unit prices are null");
          }
      }
 

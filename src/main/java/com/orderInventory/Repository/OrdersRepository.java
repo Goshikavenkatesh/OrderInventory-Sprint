@@ -13,5 +13,7 @@ public interface OrdersRepository extends JpaRepository <Orders,Integer>{
 	List<Orders> findByStoreId_StoreId(int storeId);
 	
 	
+	
+	
 
 }
